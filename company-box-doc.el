@@ -90,15 +90,17 @@
           (window (frame-root-window frame))
           (frame-resize-pixelwise t)
           ((width . height)
-           (if company-box-doc-no-wrap
-               (window-text-pixel-size window nil nil 10000 10000)
-             (window-text-pixel-size
-              window nil nil
-              ;; Use the widest space available (left or right of the box frame)
-              (let ((space-right (- (frame-native-width) (+ 40 (car box-position) box-width)))
-                    (space-left (- (car box-position) 40)))
-                (if (< space-right space-left) space-left space-right))
-              (- (frame-native-height) 40))))
+	   ;; RDU
+	   (cons 1000 ;; force width to 1000
+		 (cdr (if company-box-doc-no-wrap
+			  (window-text-pixel-size window nil nil 10000 10000)
+			(window-text-pixel-size
+			 window nil nil
+			 ;; Use the widest space available (left or right of the box frame)
+			 (let ((space-right (- (frame-native-width) (+ 40 (car box-position) box-width)))
+			       (space-left (- (car box-position) 40)))
+			   (if (< space-right space-left) space-left space-right))
+			 (- (frame-native-height) 40))))))
           (bottom (+ company-box--bottom (window-pixel-top) (frame-border-width)))
           (x (+ (car box-position) box-width (/ (frame-char-width) 2)))
           (y (cdr box-position))
